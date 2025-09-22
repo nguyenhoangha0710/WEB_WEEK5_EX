@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Categories - Spring Store</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <!-- Page Header -->
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <h1 class="h2">
+                <i class="fas fa-tags me-2"></i>Categories
+            </h1>
+            <div class="btn-toolbar mb-2 mb-md-0">
+                <div class="btn-group me-2">
+                    <a th:href="@{/categories/new}" class="btn btn-sm btn-primary">
+                        <i class="fas fa-plus me-1"></i>Add Category
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search and Filter -->
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <form th:action="@{/categories}" method="get" class="d-flex">
+                    <input type="hidden" name="page" value="0">
+                    <input type="hidden" name="size" th:value="${size ?: 10}">
+                    <input type="hidden" name="sortBy" th:value="${sortBy ?: 'name'}">
+                    <input type="hidden" name="sortDir" th:value="${sortDir ?: 'asc'}">
+                    <input class="form-control me-2" type="search" name="search" th:value="${search}" placeholder="Search categories...">
+                    <button class="btn btn-outline-primary" type="submit">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <a th:href="@{/categories}" class="btn btn-outline-secondary ms-2" th:if="${search != null and !search.empty}">
+                        <i class="fas fa-times"></i>
+                    </a>
+                </form>
+            </div>
+        </div>
+
+        <!-- Categories Table -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-list me-2"></i>Category List
+                    <span class="badge bg-primary ms-2" th:text="${totalItems}">0</span>
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <a th:href="@{/categories(page=${currentPage}, size=${size ?: 10}, sortBy='name', sortDir=${reverseSortDir}, search=${search})}" 
+                                       class="text-decoration-none">
+                                        Name
+                                        <i th:class="${sortBy == 'name' ? (sortDir == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down') : 'fas fa-sort'}" 
+                                           class="fas fa-sort ms-1"></i>
+                                    </a>
+                                </th>
+                                <th>
+                                    <a th:href="@{/categories(page=${currentPage}, size=${size ?: 10}, sortBy='description', sortDir=${reverseSortDir}, search=${search})}" 
+                                       class="text-decoration-none">
+                                        Description
+                                        <i th:class="${sortBy == 'description' ? (sortDir == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down') : 'fas fa-sort'}" 
+                                           class="fas fa-sort ms-1"></i>
+                                    </a>
+                                </th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="category : ${categories.content}" th:if="${categories.hasContent()}">
+                                <td th:text="${category.name}">Category Name</td>
+                                <td th:text="${category.description}">Category description</td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <a th:href="@{/categories/view/{id}(id=${category.id})}" class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a th:href="@{/categories/edit/{id}(id=${category.id})}" class="btn btn-sm btn-outline-secondary">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a th:href="@{/categories/delete/{id}(id=${category.id})}" 
+                                           class="btn btn-sm btn-outline-danger"
+                                           onclick="return confirm('Are you sure you want to delete this category?')">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr th:if="${!categories.hasContent()}">
+                                <td colspan="3" class="text-center text-muted">
+                                    <i class="fas fa-inbox fa-2x mb-2"></i><br>
+                                    No categories found
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        <nav th:if="${totalPages > 1}" aria-label="Category pagination">
+            <ul class="pagination justify-content-center">
+                <!-- Previous -->
+                <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                    <a class="page-link" th:href="@{/categories(page=${currentPage - 1}, size=${size ?: 10}, sortBy=${sortBy ?: 'name'}, sortDir=${sortDir ?: 'asc'}, search=${search})}">
+                        <i class="fas fa-chevron-left"></i>
+                    </a>
+                </li>
+                
+                <!-- Page Numbers -->
+                <li th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}" 
+                    class="page-item" 
+                    th:classappend="${pageNum == currentPage} ? 'active'">
+                    <a class="page-link" 
+                       th:href="@{/categories(page=${pageNum}, size=${size ?: 10}, sortBy=${sortBy ?: 'name'}, sortDir=${sortDir ?: 'asc'}, search=${search})}"
+                       th:text="${pageNum + 1}">1</a>
+                </li>
+                
+                <!-- Next -->
+                <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
+                    <a class="page-link" th:href="@{/categories(page=${currentPage + 1}, size=${size ?: 10}, sortBy=${sortBy ?: 'name'}, sortDir=${sortDir ?: 'asc'}, search=${search})}">
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Page Info -->
+        <div class="row mt-3">
+            <div class="col-12 text-center text-muted">
+                Showing <span th:text="${currentPage * size + 1}">1</span> to 
+                <span th:text="${currentPage * size + categories.numberOfElements}">10</span> of 
+                <span th:text="${totalItems}">100</span> categories
+            </div>
+        </div>
+    </div>
+</body>
+</html>
