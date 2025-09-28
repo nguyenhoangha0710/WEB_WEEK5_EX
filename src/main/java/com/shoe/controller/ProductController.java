@@ -59,6 +59,7 @@ public class ProductController {
         model.addAttribute("sortDir", sortDir);
         model.addAttribute("reverseSortDir", sortDir.equals("asc") ? "desc" : "asc");
         
+//         return "product/list";
         return "product/list";
     }
     

@@ -37,8 +37,9 @@ public class HomeController {
         
         model.addAttribute("recentCategories", recentCategories);
         model.addAttribute("recentProducts", recentProducts);
-        
+        // return "index";
         return "index";
+        // return "index-test";
     }
     
     /**

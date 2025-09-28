@@ -86,9 +86,9 @@
                     <div class="col-md-6">
                         <form th:action="@{/categories/view/{id}(id=${category.id})}" method="get" class="d-flex">
                             <input type="hidden" name="page" value="0">
-                            <input type="hidden" name="size" th:value="${size}">
-                            <input type="hidden" name="sortBy" th:value="${sortBy}">
-                            <input type="hidden" name="sortDir" th:value="${sortDir}">
+                    <input type="hidden" name="size" th:value="${size ?: 10}">
+                    <input type="hidden" name="sortBy" th:value="${sortBy ?: 'name'}">
+                    <input type="hidden" name="sortDir" th:value="${sortDir ?: 'asc'}">
                             <input class="form-control me-2" type="search" name="search" th:value="${search}" placeholder="Search products...">
                             <button class="btn btn-outline-primary" type="submit">
                                 <i class="fas fa-search"></i>
@@ -106,7 +106,7 @@
                         <thead>
                             <tr>
                                 <th>
-                                    <a th:href="@{/categories/view/{id}(id=${category.id}, page=${currentPage}, size=${size}, sortBy='code', sortDir=${reverseSortDir}, search=${search})}" 
+                                    <a th:href="@{/categories/view/{id}(id=${category.id}, page=${currentPage}, size=${size ?: 10}, sortBy='code', sortDir=${reverseSortDir}, search=${search})}" 
                                        class="text-decoration-none">
                                         Code
                                         <i th:class="${sortBy == 'code' ? (sortDir == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down') : 'fas fa-sort'}" 
@@ -114,7 +114,7 @@
                                     </a>
                                 </th>
                                 <th>
-                                    <a th:href="@{/categories/view/{id}(id=${category.id}, page=${currentPage}, size=${size}, sortBy='name', sortDir=${reverseSortDir}, search=${search})}" 
+                                    <a th:href="@{/categories/view/{id}(id=${category.id}, page=${currentPage}, size=${size ?: 10}, sortBy='name', sortDir=${reverseSortDir}, search=${search})}" 
                                        class="text-decoration-none">
                                         Name
                                         <i th:class="${sortBy == 'name' ? (sortDir == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down') : 'fas fa-sort'}" 
@@ -122,7 +122,7 @@
                                     </a>
                                 </th>
                                 <th>
-                                    <a th:href="@{/categories/view/{id}(id=${category.id}, page=${currentPage}, size=${size}, sortBy='price', sortDir=${reverseSortDir}, search=${search})}" 
+                                    <a th:href="@{/categories/view/{id}(id=${category.id}, page=${currentPage}, size=${size ?: 10}, sortBy='price', sortDir=${reverseSortDir}, search=${search})}" 
                                        class="text-decoration-none">
                                         Price
                                         <i th:class="${sortBy == 'price' ? (sortDir == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down') : 'fas fa-sort'}" 
@@ -168,7 +168,7 @@
                     <ul class="pagination justify-content-center">
                         <!-- Previous -->
                         <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
-                            <a class="page-link" th:href="@{/categories/view/{id}(id=${category.id}, page=${currentPage - 1}, size=${size}, sortBy=${sortBy}, sortDir=${sortDir}, search=${search})}">
+                            <a class="page-link" th:href="@{/categories/view/{id}(id=${category.id}, page=${currentPage - 1}, size=${size ?: 10}, sortBy=${sortBy ?: 'name'}, sortDir=${sortDir ?: 'asc'}, search=${search})}">
                                 <i class="fas fa-chevron-left"></i>
                             </a>
                         </li>
@@ -178,13 +178,13 @@
                             class="page-item" 
                             th:classappend="${pageNum == currentPage} ? 'active'">
                             <a class="page-link" 
-                               th:href="@{/categories/view/{id}(id=${category.id}, page=${pageNum}, size=${size}, sortBy=${sortBy}, sortDir=${sortDir}, search=${search})}"
+                               th:href="@{/categories/view/{id}(id=${category.id}, page=${pageNum}, size=${size ?: 10}, sortBy=${sortBy ?: 'name'}, sortDir=${sortDir ?: 'asc'}, search=${search})}"
                                th:text="${pageNum + 1}">1</a>
                         </li>
                         
                         <!-- Next -->
                         <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
-                            <a class="page-link" th:href="@{/categories/view/{id}(id=${category.id}, page=${currentPage + 1}, size=${size}, sortBy=${sortBy}, sortDir=${sortDir}, search=${search})}">
+                            <a class="page-link" th:href="@{/categories/view/{id}(id=${category.id}, page=${currentPage + 1}, size=${size ?: 10}, sortBy=${sortBy ?: 'name'}, sortDir=${sortDir ?: 'asc'}, search=${search})}">
                                 <i class="fas fa-chevron-right"></i>
                             </a>
                         </li>

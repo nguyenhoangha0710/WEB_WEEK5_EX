@@ -1,7 +1,9 @@
 package com.shoe.service;
 
 import com.shoe.entity.Category;
+import com.shoe.entity.Product;
 import com.shoe.repository.CategoryRepository;
+import com.shoe.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,6 +21,9 @@ public class CategoryService {
     
     @Autowired
     private CategoryRepository categoryRepository;
+    
+    @Autowired
+    private ProductRepository productRepository;
     
     /**
      * Get all categories
@@ -119,5 +124,24 @@ public class CategoryService {
         
         Pageable pageable = PageRequest.of(page, size, sort);
         return categoryRepository.findAll(pageable);
+    }
+    
+    /**
+     * Get products by category with pagination
+     */
+    @Transactional(readOnly = true)
+    public Page<Product> getProductsByCategory(Long categoryId, Pageable pageable) {
+        return productRepository.findByCategoryId(categoryId, pageable);
+    }
+    
+    /**
+     * Get products by category with search
+     */
+    @Transactional(readOnly = true)
+    public Page<Product> getProductsByCategory(Long categoryId, String name, Pageable pageable) {
+        if (name == null || name.trim().isEmpty()) {
+            return productRepository.findByCategoryId(categoryId, pageable);
+        }
+        return productRepository.findByCategoryIdAndNameContainingIgnoreCase(categoryId, name.trim(), pageable);
     }
 }

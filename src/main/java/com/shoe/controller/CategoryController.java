@@ -57,7 +57,8 @@ public class CategoryController {
         model.addAttribute("sortBy", sortBy);
         model.addAttribute("sortDir", sortDir);
         model.addAttribute("reverseSortDir", sortDir.equals("asc") ? "desc" : "asc");
-        
+//         return "category/list";
+// return "category/list-test";
         return "category/list";
     }
     
@@ -68,6 +69,7 @@ public class CategoryController {
     public String showNewCategoryForm(Model model) {
         model.addAttribute("category", new Category());
         return "category/form";
+        // return "category/form-test";
     }
     
     /**
@@ -80,6 +82,7 @@ public class CategoryController {
         
         model.addAttribute("category", category);
         return "category/form";
+        // return "category/form-test";
     }
     
     /**
@@ -92,6 +95,7 @@ public class CategoryController {
         
         if (result.hasErrors()) {
             return "category/form";
+            // return "category/form-test";
         }
         
         try {
